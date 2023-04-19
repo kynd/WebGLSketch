@@ -1,0 +1,17 @@
+// Foundation
+* {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+}
+
+#main {
+    position: absolute;
+    margin: auto;
+    top:0; bottom:0; left:0; right: 0;
+    transform: scale(0.5);
+    transform-origin: top left;
+}
+
+canvas {
+    border: solid 1px #000000;
+}
