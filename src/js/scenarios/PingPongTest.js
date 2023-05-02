@@ -23,7 +23,7 @@ export class PingPongTest extends ScenarioBase {
 
     update() {
         if (this.context.frameCount == 0) {
-            this.pingPong.render(this.shaderScene.scene);
+            this.pingPong.renderOnCurrentRenderTarget(this.shaderScene.scene);
         }
         this.pingPong.update();
 

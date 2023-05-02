@@ -78,7 +78,6 @@ export class PointerTest extends ScenarioBase {
         console.log("up");
     }
 
-
     update() {
         this.context.renderer.render( this.scene, this.context.camera);
     }

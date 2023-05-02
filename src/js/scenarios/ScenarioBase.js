@@ -1,8 +1,11 @@
 import $ from "jquery"
 import * as THREE from 'three';
+import { saveObjAsJson, loadJsonAsObj, saveCanvasImage, ImageSequenceSaver } from "../utils/FileUtil.js";
 
 export class ScenarioBase {
     constructor() {
+        this.paused = true;
+        this.animate();
     }
 
     setupContext(w, h) {
@@ -20,9 +23,10 @@ export class ScenarioBase {
         this.context.camera.position.z = cz;
 
         // Renderers
-        this.context.renderer = new THREE.WebGLRenderer();
+        this.context.renderer = new THREE.WebGLRenderer({preserveDrawingBuffer: true});
         this.context.renderer.setSize( this.context.width, this.context.height );
-        this.context.canvas = $(this.context.renderer.domElement);
+        this.context.canvasElm = this.context.renderer.domElement;
+        this.context.canvas = $(this.context.canvasElm);
         $('#main').append(this.context.canvas);
         $('#main').css({width: this.context.width * 0.5, height: this.context.height * 0.5});
 
@@ -38,12 +42,48 @@ export class ScenarioBase {
     pointerDown(){}
     pointerUp(){}
 
+
+    async saveCanvasImage() {
+        this.paused = true;
+        await saveCanvasImage(this.context.canvasElm);
+        this.paused = false;
+    }
+
+    async saveCanvasImageSequence() {
+        this.paused = true;
+        if (!this.imageSaver) {
+            this.imageSaver = new ImageSequenceSaver();
+            await this.imageSaver.showDirectoryPicker();
+        }
+        console.log("saving")
+        await this.imageSaver.saveCanvasImage(this.context.canvasElm);
+        
+        this.paused = false;
+    }
+
+    async saveObjAsJson(obj) {
+        this.paused = true;
+        await saveObjAsJson(obj);
+        this.paused = false;
+    }
+
+    async loadJsonAsObj() {
+        this.paused = true;
+        const obj = await loadJsonAsObj();
+        this.paused = false;
+        return obj;
+    }
+
     getPointerCrd(evt) {
         const offset = this.context.canvas.offset();
         const dpr = window.devicePixelRatio;
         const x = (evt.pageX - offset.left) * dpr;
         const y = this.context.height - (evt.pageY - offset.top) * dpr;
         return {x, y};
+    }
+
+    pointerCrdToSceneCrd(crd) {
+        return {x: crd.x - this.context.width / 2, y: crd.y - this.context.height / 2};
     }
 
     getPointerCrdNormalized(evt) {
@@ -67,20 +107,22 @@ export class ScenarioBase {
     wait (func, init = ()=>{}) {
         if (func()) {
             init();
-            this.start();
+            this.paused = false;
         } else {
             requestAnimationFrame( ()=>{this.wait(func, init)} );
         }
     }
 
     start () {
-        this.animate();
+        this.paused = false;
     }
 
     animate() {
+        if (!this.paused) {
+            this.update();
+            this.context.frameCount ++;
+        }
         requestAnimationFrame( this.animate.bind(this) );
-        this.update();
-        this.context.frameCount ++;
     }
 
     update() {}

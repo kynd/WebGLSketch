@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { SceneBase } from './SceneBase';
 import { line, v } from "../utils/DrawingUtil.js";
+import { loadText } from '../utils/FileUtil';
 
 export class TestScene01 extends SceneBase {
     constructor(context) {
@@ -31,8 +32,8 @@ export class TestScene02  extends SceneBase {
     }
     
     async setupMain() {
-        const vertexShaderSource = await this.loadShader('../shaders/common.vert');
-        const fragmentShaderSource = await this.loadShader('../shaders/test.frag');
+        const vertexShaderSource = await loadText('../shaders/common.vert');
+        const fragmentShaderSource = await loadText('../shaders/test.frag');
 
         const planeMaterial = new THREE.ShaderMaterial({
             vertexShader: vertexShaderSource,

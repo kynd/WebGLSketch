@@ -12,7 +12,7 @@ export class SimpleImageScene extends SceneBase {
 
     async setupMain() {
         const vertexShaderSource = await this.loadShader('../shaders/common.vert');
-        const fragmentShaderSource = await this.loadShader('../shaders/simple_image.vert');
+        const fragmentShaderSource = await this.loadShader('../shaders/simple_image.frag');
 
         this.material = new THREE.ShaderMaterial({
             vertexShader: vertexShaderSource,
