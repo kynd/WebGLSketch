@@ -3,6 +3,7 @@ import { ScenarioBase } from "./ScenarioBase.js";
 import { v, line, disposeObject, distance2D } from "../utils/DrawingUtil.js"
 import { PingPong } from '../scenes/PingPong.js';
 import { loadText } from '../utils/FileUtil.js'
+import { Tween } from '../utils/Tween.js'
 
 export class CircleSketch extends ScenarioBase {
     constructor() {
@@ -82,6 +83,7 @@ export class CircleSketch extends ScenarioBase {
 
 class Circle {
     static async init() {
+        this.tween = new Tween();
         Circle.vertexShaderSource = await loadText('../shaders/common.vert');
         Circle.fragmentShaderSource = await loadText('../shaders/circle_sketch.frag');
     }
@@ -114,7 +116,7 @@ class Circle {
 
         const positions = this.outlineObj.geometry.attributes.position;
         for (let i = 0; i <= this.res; i ++) {
-            const a = i / this.res * Math.PI * 2;
+            const a = this.tween.powerInOut(i / this.res) * Math.PI * 2;
             const x = this.x + Math.cos(a) * this.radius;
             const y = this.y + Math.sin(a) * this.radius;
             positions.setXYZ( i, x, y, 0 );

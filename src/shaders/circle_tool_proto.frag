@@ -28,7 +28,6 @@ void main( void ) {
     } else {
         //color = samp;
     }
-
     color.a = 1.0;
     gl_FragColor = color;
 

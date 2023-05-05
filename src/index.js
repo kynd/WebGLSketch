@@ -1,5 +1,6 @@
 import "destyle.css";
 import "./scss/style.scss";
+import $ from "jquery";
 import { TestScenario } from "./js/scenarios/TestScenario.js";
 import { PingPongTest } from "./js/scenarios/PingPongTest.js";
 import { PointerTest } from "./js/scenarios/PointerTest.js";
@@ -9,4 +10,6 @@ import { SaveTest } from "./js/scenarios/SaveTest.js";
 import { CircleSketch } from "./js/scenarios/CircleSketch";
 import { ToolPrototype } from "./js/scenarios/ToolPrototype";
 
+$(()=>{
 new ToolPrototype();
+});
