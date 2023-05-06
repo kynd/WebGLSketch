@@ -1,7 +1,6 @@
-import $ from "jquery";
-import { ScenarioBase } from "./ScenarioBase.js";
-import { TestScene01 } from "../scenes/TestScenes.js";
-import { Menu } from "../utils/Menu.js";
+import { ScenarioBase } from "../ScenarioBase.js";
+import { TestScene01 } from "../../scenes/TestScenes.js";
+import { Menu } from "../../utils/Menu.js";
 
 export class SaveTest extends ScenarioBase {
     constructor() {

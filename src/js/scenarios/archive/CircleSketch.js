@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { ScenarioBase } from "./ScenarioBase.js";
-import { v, line, disposeObject, distance2D } from "../utils/DrawingUtil.js"
-import { PingPong } from '../scenes/PingPong.js';
-import { loadText } from '../utils/FileUtil.js'
-import { Tween } from '../utils/Tween.js'
+import { ScenarioBase } from "../ScenarioBase.js";
+import { v, line, disposeObject, distance2D } from "../../utils/DrawingUtil.js"
+import { PingPong } from '../../scenes/PingPong.js';
+import { loadText } from '../../utils/FileUtil.js'
+import { Tween } from '../../utils/Tween.js'
 
 export class CircleSketch extends ScenarioBase {
     constructor() {

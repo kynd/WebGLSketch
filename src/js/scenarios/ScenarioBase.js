@@ -36,18 +36,47 @@ export class ScenarioBase {
         $(document).on("pointermove", this.pointerMove.bind(this));
         $(document).on("pointerdown", this.pointerDown.bind(this));
         $(document).on("pointerup", this.pointerUp.bind(this));
+
+        let gl = this.context.renderer.getContext();
+        const maxVertexUniformVectors = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS);
+        const maxFragmentUniformVectors = gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS);
+        console.log(maxVertexUniformVectors, maxFragmentUniformVectors)
     }
 
     pointerMove(){}
     pointerDown(){}
     pointerUp(){}
 
+    wait (func, init = ()=>{}) {
+        if (func()) {
+            init();
+            this.paused = false;
+        } else {
+            requestAnimationFrame( ()=>{this.wait(func, init)} );
+        }
+    }
+
+    start () {
+        this.paused = false;
+    }
+
+    animate() {
+        if (!this.paused) {
+            this.update();
+            this.context.frameCount ++;
+        }
+        requestAnimationFrame( this.animate.bind(this) );
+    }
+
+    update() {}
 
     async saveCanvasImage() {
         this.paused = true;
         await saveCanvasImage(this.context.canvasElm);
         this.paused = false;
     }
+
+    // ------------------
 
     async saveCanvasImageSequence() {
         this.paused = true;
@@ -103,27 +132,4 @@ export class ScenarioBase {
             return [];
         }
     }
-
-    wait (func, init = ()=>{}) {
-        if (func()) {
-            init();
-            this.paused = false;
-        } else {
-            requestAnimationFrame( ()=>{this.wait(func, init)} );
-        }
-    }
-
-    start () {
-        this.paused = false;
-    }
-
-    animate() {
-        if (!this.paused) {
-            this.update();
-            this.context.frameCount ++;
-        }
-        requestAnimationFrame( this.animate.bind(this) );
-    }
-
-    update() {}
 }

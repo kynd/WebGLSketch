@@ -1,13 +1,13 @@
 import "destyle.css";
 import "./scss/style.scss";
 import $ from "jquery";
-import { TestScenario } from "./js/scenarios/TestScenario.js";
-import { PingPongTest } from "./js/scenarios/PingPongTest.js";
-import { PointerTest } from "./js/scenarios/PointerTest.js";
-import { PointersOnShader } from "./js/scenarios/PointersOnShader.js";
-import { PointersOnShader02 } from "./js/scenarios/PointersOnShader02.js";
-import { SaveTest } from "./js/scenarios/SaveTest.js";
-import { CircleSketch } from "./js/scenarios/CircleSketch";
+import { TestScenario } from "./js/scenarios/archive/TestScenario.js";
+import { PingPongTest } from "./js/scenarios/archive/PingPongTest.js";
+import { PointerTest } from "./js/scenarios/archive/PointerTest.js";
+import { PointersOnShader } from "./js/scenarios/archive/PointersOnShader.js";
+import { PointersOnShader02 } from "./js/scenarios/archive/PointersOnShader02.js";
+import { SaveTest } from "./js/scenarios/archive/SaveTest.js";
+import { CircleSketch } from "./js/scenarios/archive/CircleSketch";
 import { ToolPrototype } from "./js/scenarios/ToolPrototype";
 
 $(()=>{

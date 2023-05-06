@@ -14,7 +14,6 @@ vec2 rotate2D(vec2 point, float angle) {
 }
 
 void main( void ) {
-
     vec2 scrCrd = gl_FragCoord.xy - res * 0.5;
     vec2 offsetFromC = scrCrd - center;
 
@@ -23,11 +22,8 @@ void main( void ) {
 
     vec4 color = texture2D(tex, sampCrd / res);
 
-    if (color.a == 0.0) {
-        color.rgb = cA;
-    } else {
-        //color = samp;
-    }
+    float lev = 1.0 - smoothstep(0.0, 0.99, color.a);
+    color.rgb = mix(color.rgb, cA, lev);
     color.a = 1.0;
     gl_FragColor = color;
 

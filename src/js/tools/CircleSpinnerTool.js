@@ -7,9 +7,11 @@ import { loadText } from '../utils/FileUtil.js'
 export class CircleSpinnerTool {
     static async init() {
         CircleSpinnerTool.vertexShaderSource = await loadText('../shaders/common.vert');
-        CircleSpinnerTool.fragmentShaderSource = await loadText('../shaders/circle_tool_proto.frag');
+        CircleSpinnerTool.fragmentShaderSource = await loadText('../shaders/CircleSpinnerTool.frag');
+        CircleSpinnerTool.ready = true;
     }
 
+    static ready = false;
     static colors = [
         0xDA0000,
         0x340000,

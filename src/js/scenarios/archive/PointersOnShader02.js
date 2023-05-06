@@ -1,8 +1,7 @@
-import $ from "jquery";
 import * as THREE from 'three';
-import { ScenarioBase } from "./ScenarioBase.js";
-import { v, line } from "../utils/DrawingUtil.js"
-import { SimpleShaderScene} from "../scenes/SimpleShaderScene.js";
+import { ScenarioBase } from "../ScenarioBase.js";
+import { v, line } from "../../utils/DrawingUtil.js"
+import { SimpleShaderScene} from "../../scenes/SimpleShaderScene.js";
 
 export class PointersOnShader02 extends ScenarioBase {
     constructor() {

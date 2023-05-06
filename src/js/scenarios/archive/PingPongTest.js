@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { ScenarioBase } from "./ScenarioBase.js";
-import { TestScene01, TestScene02 } from "../scenes/TestScenes.js"
-import { SimpleShaderScene } from "../scenes/SimpleShaderScene.js"
-import { PingPong } from "../scenes/PingPong.js"
+import { ScenarioBase } from "../ScenarioBase.js";
+import { TestScene01, TestScene02 } from "../../scenes/TestScenes.js"
+import { SimpleShaderScene } from "../../scenes/SimpleShaderScene.js"
+import { PingPong } from "../../scenes/PingPong.js"
 
 export class PingPongTest extends ScenarioBase {
     constructor() {

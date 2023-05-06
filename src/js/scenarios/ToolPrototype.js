@@ -1,15 +1,24 @@
 import * as THREE from 'three';
 import { ScenarioBase } from "./ScenarioBase.js";
-import { distance2D } from "../utils/DrawingUtil.js"
 import { PingPong } from '../scenes/PingPong.js';
 import { CircleSpinnerTool } from '../tools/CircleSpinnerTool.js';
+import { DragTapeTool } from '../tools/DragTapeTool.js';
+import { Menu } from "../utils/Menu.js";
 
 export class ToolPrototype extends ScenarioBase {
     constructor() {
         super();
         this.setupContext(1920, 1920);
+        this.setToolList();
         this.setup();
         this.asyncStart();
+    }
+
+    setToolList() {
+        this.toolList = [
+            {label: "Drag", obj: DragTapeTool, key: "d"},
+            {label: "Circle", obj: CircleSpinnerTool, key: "c"}
+        ]
     }
 
     setup() {
@@ -18,48 +27,45 @@ export class ToolPrototype extends ScenarioBase {
         this.printScene = new THREE.Scene();
         this.pingPong = new PingPong(this.context, '../shaders/simple_image.frag');
         this.isDragging = false;
+        this.waitForToolToFinish = true;
+
+        const menuDef = [];
+        this.toolList.forEach((tool)=>{
+            menuDef.push({label: tool.label, key: tool.key, f: ()=>{this.tool = tool.obj}});
+            tool.obj.init();
+        })
+        this.tool = this.toolList[0].obj;
+        this.menu = new Menu(menuDef)
     }
 
     async asyncStart() {
-        await CircleSpinnerTool.init();
-        this.start();
-    }
-
-    pointerMove(evt) {
-        if (this.isDragging) {
-            this.updateCurrentTool(evt);
-        }
-    }
-
-    pointerDown(evt) {
-        this.isDragging = true;
-
-        this.currentTool = new CircleSpinnerTool();
-        this.updateCurrentTool(evt);
-        this.scene.add(this.currentTool.previewObj);
-        this.scene.add(this.currentTool.printObj);
-    }
-
-    updateCurrentTool(evt) {
-        const crd = this.getPointerCrd(evt);
-        this.currentTool.updatePreview({
-            pointer: this.pointerCrdToSceneCrd(crd),
-            tex: this.pingPong.getCopyRenderTarget(),
-            context: this.context
-        }, this.context);
-    }
-
-    pointerUp(evt) {
-        this.isDragging = false;
-        if (this.currentTool) {
-            //this.currentTool.isDone = true;
-            this.autoActors.push(this.currentTool);
-            this.currentTool.endPreview();
-            this.currentTool = null;
-        }
+        this.wait(()=>{
+            let ready = this.pingPong.ready;
+            this.toolList.forEach((tool)=>{
+                ready &= tool.obj.ready;
+            });
+            return ready;
+        });
     }
 
     update() {
+        this.updateAutoActors();
+        this.context.renderer.autoClear = false;
+        this.context.renderer.render( this.pingPong.scene, this.context.camera);
+        this.context.renderer.render( this.scene, this.context.camera);
+        this.context.renderer.autoClear = true;
+    }
+
+    updateAutoActors() {
+        if (this.autoActors.length <= 0) {return;}
+        if (this.waitForToolToFinish) {
+            this.autoActors[0].updateAuto();
+        } else {
+            for (let i = this.autoActors.length -1; i >=0; i --) {
+                const actor = this.autoActors[i];
+                actor.updateAuto();
+            }
+        }
         for (let i = this.autoActors.length -1; i >=0; i --) {
             const actor = this.autoActors[i];
             if (actor.isDone) {
@@ -68,14 +74,39 @@ export class ToolPrototype extends ScenarioBase {
                 actor.dispose();
                 this.autoActors.splice(i, 1);
                 this.pingPong.update();
-            } else {
-                actor.updateAuto();
             }
         };
+    }
+    
+    pointerMove(evt) {
+        if (this.isDragging) {
+            this.updateCurrentTool(evt);
+        }
+    }
 
-        this.context.renderer.autoClear = false;
-        this.context.renderer.render( this.pingPong.scene, this.context.camera);
-        this.context.renderer.render( this.scene, this.context.camera);
-        this.context.renderer.autoClear = true;
+    pointerDown(evt) {
+        this.isDragging = true;
+        this.toolInstance = new this.tool();
+        this.updateCurrentTool(evt);
+        this.scene.add(this.toolInstance.previewObj);
+        this.scene.add(this.toolInstance.printObj);
+    }
+
+    updateCurrentTool(evt) {
+        const crd = this.getPointerCrd(evt);
+        this.toolInstance.updatePreview({
+            pointer: this.pointerCrdToSceneCrd(crd),
+            tex: this.pingPong.getCopyRenderTarget(),
+            context: this.context
+        }, this.context);
+    }
+
+    pointerUp(evt) {
+        this.isDragging = false;
+        if (this.toolInstance) {
+            this.autoActors.push(this.toolInstance);
+            this.toolInstance.endPreview();
+            this.toolInstance = null;
+        }
     }
 }

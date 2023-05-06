@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { ScenarioBase } from "./ScenarioBase.js";
-import { TestScene01, TestScene02 } from "../scenes/TestScenes.js"
+import { ScenarioBase } from "../ScenarioBase.js";
+import { TestScene01, TestScene02 } from "../../scenes/TestScenes.js"
 
 export class TestScenario extends ScenarioBase {
     constructor() {

@@ -1,6 +1,5 @@
-import $ from "jquery";
 import * as THREE from 'three';
-import { ScenarioBase } from "./ScenarioBase.js";
+import { ScenarioBase } from "../ScenarioBase.js";
 
 export class PointerTest extends ScenarioBase {
     constructor() {
