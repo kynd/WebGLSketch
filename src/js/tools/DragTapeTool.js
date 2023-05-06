@@ -1,33 +1,33 @@
 
 import * as THREE from 'three';
-import {line, disposeObject, distance2D, stripSidesFromArray, stripFromSides} from "../utils/DrawingUtil.js"
+import {v, line, disposeObject, distance2D, stripSidesFromArray, stripFromSides} from "../utils/DrawingUtil.js"
 import { Tween } from '../utils/Tween.js';
 import { loadText } from '../utils/FileUtil.js'
+import { CyclePalette, palette01 } from '../utils/ColorUtil.js';
 
 export class DragTapeTool {
+
+    static ready = false;
+
     static async init() {
         DragTapeTool.vertexShaderSource = await loadText('../shaders/common.vert');
         DragTapeTool.fragmentShaderSource = await loadText('../shaders/DragTapeTool.frag');
         DragTapeTool.ready = true;
+        DragTapeTool.palette = new CyclePalette(palette01);
     }
 
-    static ready = false;
-    static colors = [
-        0xDA0000,
-        0x340000,
-        0xD7FF00,
-        0x88DEFF
-    ]
-    
-    static colorIdx = 0;
     constructor() {
         this.tween = new Tween();
         this.count = 0;
         this.maxCount = 90;
         this.isDone = false;
-        this.color = DragTapeTool.colors[DragTapeTool.colorIdx ++ % DragTapeTool.colors.length];
-        this.center = null;
+        this.color = DragTapeTool.palette.get();
         this.points = [];
+
+        this.sideUniformLength = 256;
+        this.prevLength = 0;
+        this.uSide0 = Array(this.sideUniformLength).fill(new THREE.Vector3(0, 0, 0));
+        this.uSide1 = Array(this.sideUniformLength).fill(new THREE.Vector3(0, 0, 0));
     }
 
     updatePreview(data) {
@@ -39,7 +39,7 @@ export class DragTapeTool {
         if (distance2D(lastPoint, data.pointer) > 5) {
             this.points.push(data.pointer);
         }
-        this.sides = stripSidesFromArray(this.smoothenPoints(this.points), 100);
+        this.sides = stripSidesFromArray(this.smoothenPoints(this.points), 300);
         this.updatePreviewObj();
         this.updatePrintObj();
     }
@@ -86,9 +86,27 @@ export class DragTapeTool {
         this.printObj.geometry = stripFromSides(this.sides)
 
         const uniforms = this.printObj.material.uniforms;
+
+        const len0 = this.sides[0].length;
+        const len1 = this.sides[1].length;
+        const nSideLength = Math.min(len0, len1);
+
+        for (let i = Math.max(0, this.prevLength - 2); i < nSideLength; i ++) {
+            this.uSide0[i] = v(this.sides[0][i].x, this.sides[0][i].y, 0.0);
+            this.uSide1[i] = v(this.sides[1][i].x, this.sides[1][i].y, 0.0);
+        }
+        this.prevLength = nSideLength;
+
+        if (len0 > this.sideUniformLength) {
+            console.log(`WARNING: The strip has too many vertices ${len0}, ${len1}. Keep it under ${targetLength}` );
+        }
+
+        uniforms.nSidePoints = {value: nSideLength};
+        uniforms.side0 = {value: this.uSide0};
+        uniforms.side1 = {value: this.uSide1};
         uniforms.tex = {value: this.data.tex.texture};
         uniforms.cA = {value: new THREE.Color(this.color).toArray() };
-        uniforms.t = {value: this.tween.powerInOut(this.count / (this.maxCount - 1))};
+        uniforms.pct = {value: this.tween.powerInOut(this.count / (this.maxCount - 1))};
     }
 
     smoothenPoints(arr) {

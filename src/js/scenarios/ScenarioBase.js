@@ -33,9 +33,9 @@ export class ScenarioBase {
         // Misc
 		this.context.raycaster = new THREE.Raycaster();
 
-        $(document).on("pointermove", this.pointerMove.bind(this));
-        $(document).on("pointerdown", this.pointerDown.bind(this));
-        $(document).on("pointerup", this.pointerUp.bind(this));
+        $(document).on("pointermove", this._pointerMove.bind(this));
+        $(document).on("pointerdown", this._pointerDown.bind(this));
+        $(document).on("pointerup", this._pointerUp.bind(this));
 
         let gl = this.context.renderer.getContext();
         const maxVertexUniformVectors = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS);
@@ -43,9 +43,13 @@ export class ScenarioBase {
         console.log(maxVertexUniformVectors, maxFragmentUniformVectors)
     }
 
-    pointerMove(){}
-    pointerDown(){}
-    pointerUp(){}
+    _pointerMove(evt){ if (!this.paused) {this.pointerMove(evt);} }
+    _pointerDown(evt){ if (!this.paused) {this.pointerDown(evt);} }
+    _pointerUp(evt){ if (!this.paused) {this.pointerUp(evt);} }
+
+    pointerMove(evt){}
+    pointerDown(evt){}
+    pointerUp(evt){}
 
     wait (func, init = ()=>{}) {
         if (func()) {

@@ -23,8 +23,7 @@ void main( void ) {
     vec4 color = texture2D(tex, sampCrd / res);
 
     float lev = 1.0 - smoothstep(0.0, 0.99, color.a);
-    color.rgb = mix(color.rgb, cA, lev);
-    color.a = 1.0;
+    color = mix(color, vec4(cA, 1.0), lev);
     gl_FragColor = color;
 
 }
