@@ -3,7 +3,9 @@ import { ScenarioBase } from "./ScenarioBase.js";
 import { PingPong } from '../scenes/PingPong.js';
 import { CircleSpinnerTool } from '../tools/CircleSpinnerTool.js';
 import { DragTapeTool } from '../tools/DragTapeTool.js';
+import { DrifterTool } from '../tools/DrifterTool.js';
 import { Menu } from "../utils/Menu.js";
+import { SimpleImageScene } from '../scenes/SimpleImageScene.js';
 
 export class ToolPrototype extends ScenarioBase {
     constructor() {
@@ -16,7 +18,8 @@ export class ToolPrototype extends ScenarioBase {
 
     setToolList() {
         this.toolList = [
-            {label: "Drag", obj: DragTapeTool, key: "d"},
+            {label: "Drifter", obj: DrifterTool, key: "d"},
+            {label: "DragTape", obj: DragTapeTool, key: "t"},
             {label: "Circle", obj: CircleSpinnerTool, key: "c"}
         ]
     }
@@ -29,6 +32,8 @@ export class ToolPrototype extends ScenarioBase {
         this.isDragging = false;
         this.waitForToolToFinish = true;
 
+        this.imageScene = new SimpleImageScene(this.context, '../img/paint.jpg');
+
         const menuDef = [];
         this.toolList.forEach((tool)=>{
             menuDef.push({label: tool.label, key: tool.key, f: ()=>{this.tool = tool.obj}});
@@ -40,7 +45,7 @@ export class ToolPrototype extends ScenarioBase {
 
     async asyncStart() {
         this.wait(()=>{
-            let ready = this.pingPong.ready;
+            let ready = this.pingPong.ready && this.imageScene.ready;
             this.toolList.forEach((tool)=>{
                 ready &= tool.obj.ready;
             });
@@ -54,6 +59,12 @@ export class ToolPrototype extends ScenarioBase {
         this.context.renderer.render( this.pingPong.scene, this.context.camera);
         this.context.renderer.render( this.scene, this.context.camera);
         this.context.renderer.autoClear = true;
+
+        //console.log(this.context.frameCount)
+        if (this.context.frameCount <= 0) {
+            this.pingPong.renderOnCurrentRenderTarget(this.imageScene.scene);
+            this.pingPong.update();
+        }
     }
 
     updateAutoActors() {
