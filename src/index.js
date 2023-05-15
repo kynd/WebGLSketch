@@ -9,7 +9,7 @@ import { PointersOnShader02 } from "./js/scenarios/archive/PointersOnShader02.js
 import { SaveTest } from "./js/scenarios/archive/SaveTest.js";
 import { CircleSketch } from "./js/scenarios/archive/CircleSketch";
 import { ToolPrototype } from "./js/scenarios/ToolPrototype";
-
+import { DraggableToolPrototype } from "./js/scenarios/DraggableToolPrototype";
 $(()=>{
-new ToolPrototype();
+new DraggableToolPrototype();
 });

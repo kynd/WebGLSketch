@@ -24,7 +24,7 @@ export class DrifterTool {
         this.color = DrifterTool.palette.get();
         this.points = [];
 
-        this.sideUniformLength = 256;
+        this.sideUniformLength = 128;
         this.prevLength = 0;
         this.uSide0 = Array(this.sideUniformLength).fill(new THREE.Vector3(0, 0, 0));
         this.uSide1 = Array(this.sideUniformLength).fill(new THREE.Vector3(0, 0, 0));
@@ -98,13 +98,14 @@ export class DrifterTool {
         this.prevLength = nSideLength;
 
         if (len0 > this.sideUniformLength) {
-            console.log(`WARNING: The strip has too many vertices ${len0}, ${len1}. Keep it under ${targetLength}` );
+            console.log(`WARNING: The strip has too many vertices ${len0}, ${len1}. Keep it under ${this.sideUniformLength}` );
         }
 
         uniforms.nSidePoints = {value: nSideLength};
         uniforms.side0 = {value: this.uSide0};
         uniforms.side1 = {value: this.uSide1};
         uniforms.tex = {value: this.data.tex.texture};
+        uniforms.colorSource = {value: this.data.colorSource};
         uniforms.cA = {value: new THREE.Color(this.color).toArray() };
         uniforms.pct = {value: this.tween.powerInOut(this.count / (this.maxCount - 1))};
     }

@@ -124,9 +124,10 @@ export class ScenarioBase {
         return { x: m.x / this.context.width * 2 - 1, y: m.y / this.context.height * 2 -1 };
     }
 
-    getPointerIntersects(pointer) {
+    getPointerIntersects(pointer, scene) {
+        if (!scene) { scene = this.scene; }
         this.context.raycaster.setFromCamera(pointer, this.context.camera);
-        const intersects = this.context.raycaster.intersectObject( this.scene, true );
+        const intersects = this.context.raycaster.intersectObject( scene, true );
 
         if (intersects.length > 0) {
             return intersects.filter( (res)=> {

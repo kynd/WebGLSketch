@@ -35,7 +35,6 @@ export class SimpleImageScene extends SceneBase {
                 console.error('Error loading texture: ', error);
               });
 
-        console.log(this.texture)
         this.material = new THREE.MeshBasicMaterial({color: 0xff0000})
         
         this.material = new THREE.ShaderMaterial({

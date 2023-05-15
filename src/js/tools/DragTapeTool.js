@@ -24,7 +24,7 @@ export class DragTapeTool {
         this.color = DragTapeTool.palette.get();
         this.points = [];
 
-        this.sideUniformLength = 256;
+        this.sideUniformLength = 128;
         this.prevLength = 0;
         this.uSide0 = Array(this.sideUniformLength).fill(new THREE.Vector3(0, 0, 0));
         this.uSide1 = Array(this.sideUniformLength).fill(new THREE.Vector3(0, 0, 0));
@@ -105,6 +105,7 @@ export class DragTapeTool {
         uniforms.side0 = {value: this.uSide0};
         uniforms.side1 = {value: this.uSide1};
         uniforms.tex = {value: this.data.tex.texture};
+        uniforms.colorSource = {value: this.data.colorSource};
         uniforms.cA = {value: new THREE.Color(this.color).toArray() };
         uniforms.pct = {value: this.tween.powerInOut(this.count / (this.maxCount - 1))};
     }

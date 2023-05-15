@@ -4,6 +4,7 @@ uniform vec2 res;
 uniform vec2 center;
 uniform float rotation;
 uniform vec3 cA;
+uniform sampler2D colorSource;
 uniform sampler2D tex;
 
 vec2 rotate2D(vec2 point, float angle) {
@@ -23,7 +24,10 @@ void main( void ) {
     vec4 color = texture2D(tex, sampCrd / res);
 
     float lev = 1.0 - smoothstep(0.0, 0.99, color.a);
-    color = mix(color, vec4(cA, 1.0), lev);
+    //color = mix(color, vec4(cA, 1.0), lev);
+    
+    vec4 colorSrc = texture2D(colorSource, gl_FragCoord.xy / res);
+    color = mix(color, vec4(colorSrc.rgb, 1.0), lev);
     gl_FragColor = color;
 
 }

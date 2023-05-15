@@ -32,7 +32,7 @@ export class ToolPrototype extends ScenarioBase {
         this.isDragging = false;
         this.waitForToolToFinish = true;
 
-        this.imageScene = new SimpleImageScene(this.context, '../img/paint.jpg');
+        this.imageScene = new SimpleImageScene(this.context, '../img/hallway.jpg');
 
         const menuDef = [];
         this.toolList.forEach((tool)=>{
@@ -61,10 +61,12 @@ export class ToolPrototype extends ScenarioBase {
         this.context.renderer.autoClear = true;
 
         //console.log(this.context.frameCount)
+        /*
         if (this.context.frameCount <= 0) {
             this.pingPong.renderOnCurrentRenderTarget(this.imageScene.scene);
             this.pingPong.update();
         }
+        */
     }
 
     updateAutoActors() {
@@ -108,6 +110,7 @@ export class ToolPrototype extends ScenarioBase {
         this.toolInstance.updatePreview({
             pointer: this.pointerCrdToSceneCrd(crd),
             tex: this.pingPong.getCopyRenderTarget(),
+            colorSource: this.imageScene.texture,
             context: this.context
         }, this.context);
     }

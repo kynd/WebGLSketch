@@ -89,6 +89,7 @@ export class CircleSpinnerTool {
 
         const uniforms = this.printObj.material.uniforms;
         uniforms.tex = {value: this.data.tex.texture};
+        uniforms.colorSource = {value: this.data.colorSource};
         uniforms.center = {value: [this.center.x, this.center.y]};
         uniforms.cA = {value: new THREE.Color(this.color).toArray() };
         uniforms.rotation = {value: this.rotation};
