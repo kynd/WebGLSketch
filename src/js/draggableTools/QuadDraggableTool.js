@@ -1,7 +1,6 @@
 
 import * as THREE from 'three';
 import { v, line, disposeObject, quadFromCorners} from "../utils/DrawingUtil.js"
-import { Tween } from '../utils/Tween.js';
 import { loadText } from '../utils/FileUtil.js'
 import { CyclePalette, palette01 } from '../utils/ColorUtil.js';
 
@@ -17,10 +16,8 @@ export class QuadDraggableTool {
     }
 
     constructor() {
-        this.tween = new Tween();
         this.vertices = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
         this.mode = "CREATE"; // "MOVE", "EDIT", "IDLE"
-        this.isDone = false;
         this.color = QuadDraggableTool.palette.get();
     }
 
@@ -138,11 +135,18 @@ export class QuadDraggableTool {
 
         const uniforms = this.mainObj.material.uniforms;
         uniforms.tex = {value: this.data.tex};
-        uniforms.tex2 = {value: this.data.tex2};
         uniforms.colorSource = {value: this.data.colorSource};
         uniforms.pA = {value: this.pA.toArray() };
         uniforms.pB = {value: this.pB.toArray() };
     
+    }
+
+    pointerDown() {
+        return true;
+    }
+
+    pointerUp() {
+        return true;
     }
 
     startDrag(object) {

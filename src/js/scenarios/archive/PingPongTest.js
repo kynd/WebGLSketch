@@ -12,7 +12,7 @@ export class PingPongTest extends ScenarioBase {
     }
 
     setup() {
-        this.renderTarget = new THREE.WebGLRenderTarget(this.context.width, this.context.height, { format: THREE.RGBAFormat});
+        this.renderTarget = new THREE.WebGLRenderTarget(this.context.width, this.context.height, { format: THREE.RGBAFormat, type: THREE.FloatType });
 
         this.shaderScene = new SimpleShaderScene(this.context, '../shaders/checker.frag')
         this.pingPong = new PingPong(this.context, '../shaders/slide.frag');

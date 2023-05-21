@@ -34,10 +34,10 @@ export class PingPong extends SceneBase {
         // Render targets
 
         this.renderTargets = [];
-        this.renderTargets.push(new THREE.WebGLRenderTarget(this.context.width, this.context.height, { format: THREE.RGBAFormat}));
-        this.renderTargets.push(new THREE.WebGLRenderTarget(this.context.width, this.context.height, { format: THREE.RGBAFormat}));
+        this.renderTargets.push(new THREE.WebGLRenderTarget(this.context.width, this.context.height, { format: THREE.RGBAFormat, type: THREE.FloatType }));
+        this.renderTargets.push(new THREE.WebGLRenderTarget(this.context.width, this.context.height, { format: THREE.RGBAFormat, type: THREE.FloatType }));
 
-        this.copyRenderTarget = new THREE.WebGLRenderTarget(this.context.width, this.context.height, { format: THREE.RGBAFormat});
+        this.copyRenderTarget = new THREE.WebGLRenderTarget(this.context.width, this.context.height, { format: THREE.RGBAFormat, type: THREE.FloatType });
 
         this.pingpongIndex = 0;
 

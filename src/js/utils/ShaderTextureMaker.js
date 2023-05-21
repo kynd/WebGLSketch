@@ -20,7 +20,7 @@ export class ShaderTextureMaker {
         const cz = this.height / 2 / Math.tan(hFovRadian);
         this.camera = new THREE.PerspectiveCamera(fov, this.width/this.height, 0.1, cz * 2 );
         this.camera.position.z = cz;
-        this.renderTarget = new THREE.WebGLRenderTarget(this.width, this.height, { format: THREE.RGBAFormat});
+        this.renderTarget = new THREE.WebGLRenderTarget(this.width, this.height, {  format: THREE.RGBAFormat, type: THREE.FloatType });
 
         this.vertexShaderSource = await loadText('../shaders/common.vert');
         this.fragmentShaderSource = await loadText(this.shaderPath);
