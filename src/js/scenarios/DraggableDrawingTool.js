@@ -3,13 +3,14 @@ import $ from "jquery";
 import { ScenarioBase } from "./ScenarioBase.js";
 import { PingPong } from '../scenes/PingPong.js';
 import { Menu } from "../utils/Menu.js";
-import { QuadDraggableTool, QuadSamplerDraggableTool, QuadStripeSamplerDraggableTool } from "../draggableTools/QuadDraggableTool"
-import { StrokeDraggableTool, StrokeSamplerDraggableTool, StrokeStripeSamplerDraggableTool } from "../draggableTools/StrokeDraggableTool"
+import { ColorSelector } from "../utils/ColorSelector.js";
+import { QuadStripeDraggableTool } from "../draggableTools/QuadDraggableTool.js"
+import { StrokeStripeDraggableTool } from "../draggableTools/StrokeDraggableTool.js"
 import { SimpleImageScene } from '../scenes/SimpleImageScene.js';
 import { ShaderTextureMaker } from "../utils/ShaderTextureMaker.js"
 import { DraggableTool } from '../draggableTools/DraggableTool.js';
 
-export class DraggableToolPrototype extends ScenarioBase {
+export class DraggableDrawingTool extends ScenarioBase {
     constructor() {
         super();
         this.setupContext(1920, 1920);
@@ -17,21 +18,21 @@ export class DraggableToolPrototype extends ScenarioBase {
         this.setup();
         this.asyncStart();
         this.isAnimating = false;
+        this.isPreviewing = false;
         $("body").on("keydown", (evt)=> {
             if (evt.key === "Enter") {
                 this.toggleAnimation();
+            }
+            if (evt.key === "\\") {
+                this.togglePreview();
             }
         });
     }
 
     setToolList() {
         this.toolList = [
-            {label: "Stroke", key: "s", obj: StrokeSamplerDraggableTool},
-            {label: "StrokeGrad", key: "d", obj: StrokeDraggableTool},
-            {label: "StrokeStripe", key: "f", obj: StrokeStripeSamplerDraggableTool},
-            {label: "Quad", key: "q", obj: QuadSamplerDraggableTool},
-            {label: "QuadGrad", key: "w", obj: QuadDraggableTool},
-            {label: "QuadStripe", key: "e", obj: QuadStripeSamplerDraggableTool},
+            {label: "Stroke", key: "s", obj: StrokeStripeDraggableTool},
+            {label: "Quad", key: "q", obj: QuadStripeDraggableTool}
         ]
     }
 
@@ -40,7 +41,7 @@ export class DraggableToolPrototype extends ScenarioBase {
         this.mainScene = new THREE.Scene();
         this.printScene = new THREE.Scene();
         this.pingPong = new PingPong(this.context, '../shaders/simple_image.frag');
-        this.imageScene = new SimpleImageScene(this.context, '../img/gradient_bw.png');
+        this.imageScene = new SimpleImageScene(this.context, '../img/hallway.jpg');
 
         this.isDragging = false;
         this.waitForToolToFinish = true;
@@ -57,7 +58,10 @@ export class DraggableToolPrototype extends ScenarioBase {
             tool.obj.init();
         })
         this.tool = this.toolList[0].obj;
-        this.menu = new Menu(menuDef)
+        this.menu = new Menu(menuDef);
+
+        this.colorSelector = new ColorSelector();
+        this.colorSelector.generateLibraryFromImage(24, '../img/hallway.jpg')
     }
 
     async asyncStart() {
@@ -82,7 +86,9 @@ export class DraggableToolPrototype extends ScenarioBase {
         this.context.renderer.render( this.imageScene.scene, this.context.camera);
         
         this.context.renderer.render( this.mainScene, this.context.camera);
-        this.context.renderer.render( this.scene, this.context.camera);
+        if (this.isPreviewing) {
+            this.context.renderer.render( this.scene, this.context.camera);
+        }
         this.context.renderer.autoClear = true;
     }
     
@@ -135,7 +141,8 @@ export class DraggableToolPrototype extends ScenarioBase {
         tool.update({
             canvasTexture: this.pingPong.getCopyRenderTarget().texture,
             referenceTexture: this.imageScene.texture,
-            context: this.context
+            context: this.context,
+            colors:[...this.colorSelector.selectionColors]
         });
     }
 
@@ -167,6 +174,10 @@ export class DraggableToolPrototype extends ScenarioBase {
                 }
             });
         }
+    }
+
+    togglePreview() {
+        this.isPreviewing = !this.isPreviewing;
     }
 
     updateAnimation() {

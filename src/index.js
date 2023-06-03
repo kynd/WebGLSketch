@@ -11,8 +11,8 @@ import { SaveTest } from "./js/scenarios/archive/SaveTest.js";
 import { CircleSketch } from "./js/scenarios/archive/CircleSketch";
 import { ToolPrototype } from "./js/scenarios/ToolPrototype";
 import { DraggableToolPrototype } from "./js/scenarios/DraggableToolPrototype";
-
+import { DraggableDrawingTool } from "./js/scenarios/DraggableDrawingTool";
 
 $(()=>{
-new DraggableToolPrototype();
+    new DraggableDrawingTool();
 });

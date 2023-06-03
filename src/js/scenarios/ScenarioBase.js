@@ -34,7 +34,7 @@ export class ScenarioBase {
 		this.context.raycaster = new THREE.Raycaster();
 
         $(document).on("pointermove", this._pointerMove.bind(this));
-        $(document).on("pointerdown", this._pointerDown.bind(this));
+        $(this.context.canvas).on("pointerdown", this._pointerDown.bind(this));
         $(document).on("pointerup", this._pointerUp.bind(this));
 
         let gl = this.context.renderer.getContext();

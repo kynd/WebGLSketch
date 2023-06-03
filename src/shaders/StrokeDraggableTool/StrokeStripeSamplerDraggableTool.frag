@@ -4,9 +4,9 @@ uniform vec2 res;
 
 uniform float nSidePoints;
 uniform float maxSidePoints;
-uniform sampler2D colorSource;
+uniform sampler2D referenceTexture;
 uniform sampler2D sides;
-uniform sampler2D tex;
+uniform sampler2D canvasTexture;
 
 
 vec2 uvToSampleCrd(vec2 uv) {
@@ -23,7 +23,8 @@ void main( void ) {
     vec2 sampCrd = vUv;
     sampCrd.y = max(0.0, sampCrd.y);
     vec2 sampleCrd = uvToSampleCrd(sampCrd);
-    vec4 color = texture2D(colorSource, sampleCrd);
+    sampleCrd.y = 0.0;
+    vec4 color = texture2D(referenceTexture, sampleCrd);
 
 /*
     float u0 = (vUv.y * nSidePoints) / maxSidePoints;
